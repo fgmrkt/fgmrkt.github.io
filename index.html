@@ -6,26 +6,23 @@
   <title>FGMRKT – Coming Soon</title>
   <style>
     html, body {
-      height: 100%;
       margin: 0;
       padding: 0;
-      background: radial-gradient(circle at center, #141029, #0b0718 70%);
+      background: radial-gradient(circle at center, #1a0f2d, #0b0718 70%);
       color: #d6b3ff;
       font-family: 'Arial', sans-serif;
       overflow: hidden;
       text-align: center;
       -webkit-text-size-adjust: none;
+      height: 100%;
     }
 
-    /* Flexbox fix voor Instagram */
     body {
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      min-height: 100svh; /* ✅ werkt beter in Instagram dan 100vh */
-      padding-bottom: env(safe-area-inset-bottom);
-      padding-top: env(safe-area-inset-top);
+      transition: height 0.2s ease;
     }
 
     .moon-glow {
@@ -80,7 +77,6 @@
       color: #e4baff;
     }
 
-    /* 📱 Mobiele en Instagram browser fix */
     @media (max-width: 600px) {
       .moon-glow {
         width: 220px;
@@ -104,13 +100,21 @@
 </head>
 <body>
   <div class="moon-glow"></div>
-
-  <h1>COMING SOON 👀</h1>
-
+  <h1>COMING SOON </h1>
   <h2>Socials:</h2>
   <p>
     IG: <a href="https://www.instagram.com/fgmrkt" target="_blank">fgmrkt</a><br>
     DC: <a href="https://discord.gg/fq64" target="_blank">fq64</a>
   </p>
+
+  <script>
+    // ✅ Fix voor Instagram-in-app browser (zet body height gelijk aan innerHeight)
+    function fixViewportHeight() {
+      document.body.style.height = window.innerHeight + 'px';
+    }
+    window.addEventListener('resize', fixViewportHeight);
+    window.addEventListener('orientationchange', fixViewportHeight);
+    fixViewportHeight();
+  </script>
 </body>
 </html>
