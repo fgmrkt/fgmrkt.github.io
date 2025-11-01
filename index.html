@@ -1,120 +1,150 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>FGMRKT – Coming Soon</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      background: radial-gradient(circle at center, #1a0f2d, #0b0718 70%);
-      color: #d6b3ff;
-      font-family: 'Arial', sans-serif;
-      overflow: hidden;
-      text-align: center;
-      -webkit-text-size-adjust: none;
-      height: 100%;
-    }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>FGMRKT – Coming Soon</title>
+<style>
+  :root {
+    /* --vh wordt door JS gezet als fallback */
+    --vh: 100vh;
+  }
 
-    body {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      transition: height 0.2s ease;
-    }
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: radial-gradient(circle at center, #141029, #0b0718 70%);
+    font-family: Arial, sans-serif;
+    -webkit-text-size-adjust: none;
+  }
 
-    .moon-glow {
-      position: absolute;
-      width: 280px;
-      height: 280px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 50% 55%, rgba(200, 150, 255, 0.45), rgba(70, 0, 120, 0.05) 70%, transparent 100%);
-      box-shadow:
-        0 0 60px 25px rgba(180, 100, 255, 0.25),
-        0 0 120px 60px rgba(140, 80, 255, 0.15);
-      animation: pulse 6s ease-in-out infinite;
-      z-index: 0;
-    }
+  /* body kan overflow:auto zodat Instagram toolbars kunnen verschijnen zonder cut-off */
+  body {
+    min-height: calc(var(--vh));
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 0.9; }
-      50% { transform: scale(1.05); opacity: 1; }
-    }
+  /* FIXED CENTER CONTAINER — altijd gecentreerd in het zichtbare viewport */
+  .center {
+    position: fixed;               /* fixed relative to viewport (niet document flow) */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(92vw, 720px);       /* responsive maximum width */
+    max-width: 720px;
+    z-index: 5;
+    text-align: center;
+    pointer-events: auto;
+  }
 
-    h1 {
-      font-size: 2.2rem;
-      letter-spacing: 1.5px;
-      margin-bottom: 1.2rem;
-      z-index: 2;
-      color: #d6b3ff;
-      text-shadow: 0 0 15px rgba(180, 100, 255, 0.3);
-    }
+  /* Maan / glow zit visueel achter de center content */
+  .moon-glow {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: clamp(180px, 40vw, 360px);
+    height: clamp(180px, 40vw, 360px);
+    border-radius: 50%;
+    z-index: 1;
+    background: radial-gradient(circle at 48% 52%,
+      rgba(200,150,255,0.45),
+      rgba(70,0,120,0.06) 68%,
+      rgba(8,4,16,0.0) 100%);
+    box-shadow:
+      0 0 60px 25px rgba(180, 100, 255, 0.25),
+      0 0 120px 60px rgba(140, 80, 255, 0.12);
+    animation: pulse 6s ease-in-out infinite;
+    pointer-events: none;
+  }
 
-    h2 {
-      font-size: 1rem;
-      margin-bottom: 0.5rem;
-      z-index: 2;
-    }
+  @keyframes pulse {
+    0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 0.92; }
+    50%    { transform: translate(-50%,-50%) scale(1.04); opacity: 1; }
+  }
 
-    p {
-      font-size: 0.9rem;
-      opacity: 0.85;
-      margin: 3px 0;
-      line-height: 1.3;
-      z-index: 2;
-    }
+  /* Tekst styling */
+  h1 {
+    margin: 0 0 0.9rem 0;
+    color: #d6b3ff;
+    font-size: clamp(20px, 5.2vw, 44px);
+    letter-spacing: 1.6px;
+    text-shadow: 0 0 15px rgba(180,100,255,0.28);
+    z-index: 6;
+  }
 
-    a {
-      color: #d698ff;
-      text-decoration: none;
-      font-weight: bold;
-    }
+  h2 {
+    margin: 1rem 0 0.25rem 0;
+    color: #e7ccff;
+    font-size: clamp(12px, 2.2vw, 18px);
+    z-index: 6;
+  }
 
-    a:hover {
-      text-decoration: underline;
-      color: #e4baff;
-    }
+  p {
+    margin: 0.3rem 0;
+    color: rgba(214,179,255,0.95);
+    font-size: clamp(12px, 2vw, 16px);
+    line-height: 1.35;
+    z-index: 6;
+  }
 
-    @media (max-width: 600px) {
-      .moon-glow {
-        width: 220px;
-        height: 220px;
-      }
+  a {
+    color: #d698ff;
+    text-decoration: none;
+    font-weight: 700;
+  }
+  a:hover { text-decoration: underline; color: #e4baff; }
 
-      h1 {
-        font-size: 1.8rem;
-        margin-bottom: 1rem;
-      }
-
-      h2 {
-        font-size: 0.95rem;
-      }
-
-      p {
-        font-size: 0.85rem;
-      }
-    }
-  </style>
+  /* Kleine extra padding onder de center op kleine schermen zodat Instagram UI niet overlapt */
+  @media (max-width: 420px) {
+    .center { padding-bottom: 6vh; }
+  }
+</style>
 </head>
 <body>
-  <div class="moon-glow"></div>
-  <h1>COMING SOON </h1>
-  <h2>Socials:</h2>
-  <p>
-    IG: <a href="https://www.instagram.com/fgmrkt" target="_blank">fgmrkt</a><br>
-    DC: <a href="https://discord.gg/fq64" target="_blank">fq64</a>
-  </p>
 
-  <script>
-    // ✅ Fix voor Instagram-in-app browser (zet body height gelijk aan innerHeight)
-    function fixViewportHeight() {
-      document.body.style.height = window.innerHeight + 'px';
+  <!-- Moon glow (achtergrond) -->
+  <div class="moon-glow" aria-hidden="true"></div>
+
+  <!-- CENTERED CONTENT (fixed) -->
+  <div class="center" role="main">
+    <h1>COMING SOON 👀</h1>
+
+    <h2>Socials:</h2>
+    <p>IG: <a href="https://www.instagram.com/fgmrkt" target="_blank" rel="noopener">fgmrkt</a></p>
+    <p>DC: <a href="https://discord.gg/fq64" target="_blank" rel="noopener">fq64</a></p>
+  </div>
+
+<script>
+  // 1) Stel CSS variable --vh in op basis van echte innerHeight
+  function setVhVar() {
+    try {
+      var vh = window.innerHeight + 'px';
+      document.documentElement.style.setProperty('--vh', vh);
+      // body min-height fallback
+      document.body.style.minHeight = vh;
+    } catch (e) {
+      // noop
     }
-    window.addEventListener('resize', fixViewportHeight);
-    window.addEventListener('orientationchange', fixViewportHeight);
-    fixViewportHeight();
-  </script>
+  }
+
+  // 2) Run direct & op resize/orientationchange. Instagram can change innerHeight after UI chrome appears.
+  window.addEventListener('load', setVhVar);
+  window.addEventListener('resize', setVhVar);
+  window.addEventListener('orientationchange', function() {
+    // little delay helps when orientation change triggers chrome animation
+    setTimeout(setVhVar, 250);
+  });
+
+  setVhVar();
+
+  // 3) Extra safety: if the page is inside an iframe and Instagram changes layout late,
+  //    re-run a few times shortly after load
+  setTimeout(setVhVar, 500);
+  setTimeout(setVhVar, 1200);
+  setTimeout(setVhVar, 2500);
+</script>
 </body>
 </html>
