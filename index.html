@@ -2,24 +2,32 @@
 <html lang="nl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>FGMRKT – Coming Soon</title>
   <style>
-    body {
-      height: 100vh;
+    html, body {
+      height: 100%;
       margin: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      padding: 0;
       background: radial-gradient(circle at center, #141029, #0b0718 70%);
       color: #d6b3ff;
       font-family: 'Arial', sans-serif;
       overflow: hidden;
       text-align: center;
+      -webkit-text-size-adjust: none;
     }
 
-    /* Maan met paarse gloed */
+    /* Flexbox fix voor Instagram */
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100svh; /* ✅ werkt beter in Instagram dan 100vh */
+      padding-bottom: env(safe-area-inset-bottom);
+      padding-top: env(safe-area-inset-top);
+    }
+
     .moon-glow {
       position: absolute;
       width: 280px;
@@ -29,22 +37,15 @@
       box-shadow:
         0 0 60px 25px rgba(180, 100, 255, 0.25),
         0 0 120px 60px rgba(140, 80, 255, 0.15);
-      z-index: 0;
       animation: pulse 6s ease-in-out infinite;
+      z-index: 0;
     }
 
     @keyframes pulse {
-      0%, 100% {
-        transform: scale(1);
-        opacity: 0.9;
-      }
-      50% {
-        transform: scale(1.05);
-        opacity: 1;
-      }
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.05); opacity: 1; }
     }
 
-    /* Tekst */
     h1 {
       font-size: 2.2rem;
       letter-spacing: 1.5px;
@@ -79,7 +80,7 @@
       color: #e4baff;
     }
 
-    /* 📱 Mobiele aanpassingen */
+    /* 📱 Mobiele en Instagram browser fix */
     @media (max-width: 600px) {
       .moon-glow {
         width: 220px;
