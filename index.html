@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FGMRKT – Coming Soon</title>
   <style>
-    /* Achtergrond en basisopmaak */
+    /* Basisinstellingen */
     body {
       height: 100vh;
       margin: 0;
@@ -20,7 +20,7 @@
       text-align: center;
     }
 
-    /* Realistische maan / glow effect */
+    /* Realistische maan met gloed */
     .moon-glow {
       position: absolute;
       width: 340px;
@@ -45,48 +45,32 @@
       }
     }
 
-    /* Titel */
-    h1 {
-      font-size: 2.8rem;
-      letter-spacing: 2px;
-      margin-bottom: 2rem;
-      z-index: 2;
-      color: #d6b3ff;
-      text-shadow: 0 0 15px rgba(180, 100, 255, 0.3);
-    }
-
-    /* Progress bar */
-    .progress-bar {
-      width: 160px;
-      height: 8px;
-      background-color: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      overflow: hidden;
+    /* Gebogen tekst */
+    .curved-text {
       position: relative;
+      width: 400px;
+      height: 220px;
       z-index: 2;
-      margin-bottom: 3rem;
     }
 
-    .progress-bar::before {
-      content: "";
+    svg {
       position: absolute;
-      width: 60%;
-      height: 100%;
-      background: linear-gradient(90deg, #b66bff, #d698ff);
-      border-radius: 10px;
-      animation: loading 2.5s ease-in-out infinite;
+      top: 0;
+      left: 0;
     }
 
-    @keyframes loading {
-      0% { transform: translateX(-60%); }
-      50% { transform: translateX(0%); }
-      100% { transform: translateX(60%); }
+    text {
+      fill: #d6b3ff;
+      font-size: 2.4rem;
+      letter-spacing: 2px;
+      text-shadow: 0 0 12px rgba(180, 100, 255, 0.3);
     }
 
-    /* Tekst en links */
+    /* Socials */
     h2 {
       font-size: 1.1rem;
-      margin-bottom: 0.5rem;
+      margin-top: 2rem;
+      margin-bottom: 0.4rem;
       z-index: 2;
     }
 
@@ -113,8 +97,16 @@
 <body>
   <div class="moon-glow"></div>
 
-  <h1>COMING SOON</h1>
-  <div class="progress-bar"></div>
+  <div class="curved-text">
+    <svg viewBox="0 0 500 300">
+      <path id="curve" d="M 50 250 A 200 200 0 0 1 450 250" fill="transparent"/>
+      <text width="500">
+        <textPath xlink:href="#curve" startOffset="50%" text-anchor="middle">
+          COMING SOON 👀
+        </textPath>
+      </text>
+    </svg>
+  </div>
 
   <h2>Socials:</h2>
   <p>
