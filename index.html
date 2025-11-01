@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FGMRKT – Coming Soon</title>
   <style>
-    /* Basisinstellingen */
+    /* Achtergrond en basisopmaak */
     body {
       height: 100vh;
       margin: 0;
@@ -20,7 +20,7 @@
       text-align: center;
     }
 
-    /* Realistische maan met gloed */
+    /* Realistische maan / glow effect */
     .moon-glow {
       position: absolute;
       width: 340px;
@@ -45,32 +45,20 @@
       }
     }
 
-    /* Gebogen tekst */
-    .curved-text {
-      position: relative;
-      width: 400px;
-      height: 220px;
-      z-index: 2;
-    }
-
-    svg {
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-
-    text {
-      fill: #d6b3ff;
-      font-size: 2.4rem;
+    /* Titel */
+    h1 {
+      font-size: 2.8rem;
       letter-spacing: 2px;
-      text-shadow: 0 0 12px rgba(180, 100, 255, 0.3);
+      margin-bottom: 2rem;
+      z-index: 2;
+      color: #d6b3ff;
+      text-shadow: 0 0 15px rgba(180, 100, 255, 0.3);
     }
 
-    /* Socials */
+    /* Tekst en links */
     h2 {
       font-size: 1.1rem;
-      margin-top: 2rem;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.5rem;
       z-index: 2;
     }
 
@@ -97,16 +85,7 @@
 <body>
   <div class="moon-glow"></div>
 
-  <div class="curved-text">
-    <svg viewBox="0 0 500 300">
-      <path id="curve" d="M 50 250 A 200 200 0 0 1 450 250" fill="transparent"/>
-      <text width="500">
-        <textPath xlink:href="#curve" startOffset="50%" text-anchor="middle">
-          COMING SOON 👀
-        </textPath>
-      </text>
-    </svg>
-  </div>
+  <h1>COMING SOON 👀</h1>
 
   <h2>Socials:</h2>
   <p>
