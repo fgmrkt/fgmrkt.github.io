@@ -5,34 +5,101 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FGMRKT – Coming Soon</title>
   <style>
+    /* Algemene stijl */
     body {
-      background-color: #0f172a;
-      color: #f1f5f9;
-      font-family: 'Arial', sans-serif;
+      height: 100vh;
+      margin: 0;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
+      background: radial-gradient(circle at center, #1a1a2e, #0f0f1a 70%);
+      color: #f1f5f9;
+      font-family: 'Arial', sans-serif;
+      overflow: hidden;
       text-align: center;
     }
+
+    /* Glow effect (soort zonsverduistering) */
+    .glow {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 100, 150, 0.3), transparent 70%);
+      box-shadow: 0 0 60px 20px rgba(255, 100, 150, 0.2);
+      z-index: 0;
+    }
+
     h1 {
       font-size: 2.5rem;
-      margin-bottom: 5px 0rem;
+      z-index: 2;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
     }
+
+    /* Lijn / progress bar */
+    .progress-bar {
+      width: 150px;
+      height: 8px;
+      background-color: #222;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      z-index: 2;
+    }
+
+    .progress-bar::before {
+      content: "";
+      position: absolute;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, #ff4d6d, #ff7eb3);
+      border-radius: 10px;
+      animation: loading 2.5s ease-in-out infinite;
+    }
+
+    @keyframes loading {
+      0% { transform: translateX(-60%); }
+      50% { transform: translateX(0%); }
+      100% { transform: translateX(60%); }
+    }
+
     h2 {
-      font-size: 1.4rem;
-      margin: 0.5rem 0 0.2rem 0;
-    }
-    p {
       font-size: 1rem;
+      margin-top: 3rem;
+      z-index: 2;
+    }
+
+    p {
+      font-size: 1.1rem;
+      opacity: 0.8;
       margin: 4px 0;
-      line-height: 1.2;
+      line-height: 1.4;
+      z-index: 2;
+    }
+
+    a {
+      color: #ff7eb3;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <h1>COMING SOON 👀</h1>
+  <div class="glow"></div>
+  <h1>COMING SOON</h1>
+  <div class="progress-bar"></div>
+
+  <h2>Socials:</h2>
+  <p>
+    IG: <a href="https://www.instagram.com/fgmrkt" target="_blank">fgmrkt</a><br>
+    DC: <a href="https://discord.gg/fq64" target="_blank">fq64</a>
+  </p>
 </body>
 </html>
