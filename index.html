@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FGMRKT – Coming Soon</title>
   <style>
-    /* Algemene stijl */
+    /* Achtergrond en basisopmaak */
     body {
       height: 100vh;
       margin: 0;
@@ -13,41 +13,58 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      background: radial-gradient(circle at center, #1a1a2e, #0f0f1a 70%);
-      color: #f1f5f9;
+      background: radial-gradient(circle at center, #141029, #0b0718 70%);
+      color: #d6b3ff;
       font-family: 'Arial', sans-serif;
       overflow: hidden;
       text-align: center;
     }
 
-    /* Glow effect (soort zonsverduistering) */
-    .glow {
+    /* Realistische maan / glow effect */
+    .moon-glow {
       position: absolute;
-      width: 300px;
-      height: 300px;
+      width: 340px;
+      height: 340px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 100, 150, 0.3), transparent 70%);
-      box-shadow: 0 0 60px 20px rgba(255, 100, 150, 0.2);
+      background: radial-gradient(circle at 50% 55%, rgba(200, 150, 255, 0.45), rgba(70, 0, 120, 0.05) 70%, transparent 100%);
+      box-shadow:
+        0 0 60px 25px rgba(180, 100, 255, 0.25),
+        0 0 120px 60px rgba(140, 80, 255, 0.15);
       z-index: 0;
+      animation: pulse 6s ease-in-out infinite;
     }
 
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.9;
+      }
+      50% {
+        transform: scale(1.05);
+        opacity: 1;
+      }
+    }
+
+    /* Titel */
     h1 {
-      font-size: 2.5rem;
-      z-index: 2;
+      font-size: 2.8rem;
       letter-spacing: 2px;
-      text-transform: uppercase;
       margin-bottom: 2rem;
+      z-index: 2;
+      color: #d6b3ff;
+      text-shadow: 0 0 15px rgba(180, 100, 255, 0.3);
     }
 
-    /* Lijn / progress bar */
+    /* Progress bar */
     .progress-bar {
-      width: 150px;
+      width: 160px;
       height: 8px;
-      background-color: #222;
+      background-color: rgba(255, 255, 255, 0.1);
       border-radius: 10px;
       overflow: hidden;
       position: relative;
       z-index: 2;
+      margin-bottom: 3rem;
     }
 
     .progress-bar::before {
@@ -55,7 +72,7 @@
       position: absolute;
       width: 60%;
       height: 100%;
-      background: linear-gradient(90deg, #ff4d6d, #ff7eb3);
+      background: linear-gradient(90deg, #b66bff, #d698ff);
       border-radius: 10px;
       animation: loading 2.5s ease-in-out infinite;
     }
@@ -66,33 +83,36 @@
       100% { transform: translateX(60%); }
     }
 
+    /* Tekst en links */
     h2 {
-      font-size: 1rem;
-      margin-top: 3rem;
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
       z-index: 2;
     }
 
     p {
-      font-size: 1.1rem;
-      opacity: 0.8;
+      font-size: 1rem;
+      opacity: 0.85;
       margin: 4px 0;
       line-height: 1.4;
       z-index: 2;
     }
 
     a {
-      color: #ff7eb3;
+      color: #d698ff;
       text-decoration: none;
       font-weight: bold;
     }
 
     a:hover {
       text-decoration: underline;
+      color: #e4baff;
     }
   </style>
 </head>
 <body>
-  <div class="glow"></div>
+  <div class="moon-glow"></div>
+
   <h1>COMING SOON</h1>
   <div class="progress-bar"></div>
 
