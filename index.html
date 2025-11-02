@@ -10,33 +10,36 @@
     padding: 0;
     height: 100%;
     background: radial-gradient(circle at center, #140021 0%, #070010 80%);
-    background-color: #070010; /* fallback voor iOS */
+    background-color: #070010;
     font-family: 'Arial', sans-serif;
     color: #d6b3ff;
     text-align: center;
     overflow: hidden;
   }
 
-  /* Fade-in animatie */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  /* animatie (alleen translateY + opacity) op inner element */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
   .container {
     position: absolute;
     top: 50%;
     left: 50%;
+    /* centreren blijft hier en wordt niet aangeraakt door de animatie */
     transform: translate(-50%, -50%);
     width: 100%;
     max-width: 400px;
-    animation: fadeIn 1.5s ease-out;
+    /* geen animation hier */
+  }
+
+  .content {
+    /* deze mag animeren zonder de centrering te breken */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeInUp 700ms ease-out both;
   }
 
   .moon {
@@ -54,7 +57,11 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    animation: fadeIn 2s ease-out;
+    /* laat de maan iets later en zachter verschijnen */
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 900ms ease-out both;
+    animation-delay: 150ms;
   }
 
   h1 {
@@ -74,8 +81,9 @@
     color: #b78aff;
     line-height: 1.1;
     opacity: 0;
-    animation: fadeIn 2.5s ease-out forwards;
-    animation-delay: 1s;
+    /* socials fade in later */
+    animation: fadeInUp 900ms ease-out forwards;
+    animation-delay: 1100ms;
   }
 
   .socials p {
@@ -96,29 +104,33 @@
 </head>
 <body>
   <div class="container">
-    <div class="moon">
-      <h1>COMING SOON</h1>
+    <!-- .content animeren voorkomt dat de centrering verschuift -->
+    <div class="content">
+      <div class="moon">
+        <h1>COMING SOON</h1>
+      </div>
     </div>
   </div>
 
   <div class="socials">
-    <p>IG: <a href="https://www.instagram.com/fgmrkt" target="_blank">fgmrkt</a></p>
-    <p>TT: <a href="https://www.tiktok.com/@flixlvz" target="_blank">flixlvz</a></p>
+    <p>IG: <a href="https://www.instagram.com/fgmrkt" target="_blank" rel="noopener">fgmrkt</a></p>
+    <p>TT: <a href="https://www.tiktok.com/@flixlvz" target="_blank" rel="noopener">flixlvz</a></p>
     <p>DC: <span>fq64</span></p>
   </div>
 
   <script>
-    // Fix voor Instagram viewport (voorkomt verschuiving of inzoomen)
+    // viewport fix reuse (houdt de gecentreerde container op zichtbare midden)
     function fixInstagramViewport() {
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
       const container = document.querySelector('.container');
-      container.style.top = `${window.innerHeight / 2}px`;
+      if (container) container.style.top = `${window.innerHeight / 2}px`;
     }
-
     window.addEventListener('resize', fixInstagramViewport);
     window.addEventListener('orientationchange', fixInstagramViewport);
     window.addEventListener('load', fixInstagramViewport);
+    // run een paar keer in de eerste seconden (instagram chrome kan later verschijnen)
+    setTimeout(fixInstagramViewport, 250);
+    setTimeout(fixInstagramViewport, 800);
+    setTimeout(fixInstagramViewport, 1500);
   </script>
 </body>
 </html>
