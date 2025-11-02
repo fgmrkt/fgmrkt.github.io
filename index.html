@@ -45,42 +45,46 @@
 
   h1 {
     font-size: clamp(1.6rem, 3vw, 2.2rem);
-    margin: 0 0 0.8rem 0;
+    margin: 0;
     color: #d6b3ff;
     text-shadow: 0 0 15px rgba(180,100,255,0.4);
   }
 
-  h2 {
-    margin: 0.5rem 0 0.3rem 0;
-    font-size: clamp(0.9rem, 2vw, 1.1rem);
-    color: #e7ccff;
+  /* Socials rechtsonder */
+  .socials {
+    position: fixed;
+    bottom: 20px;
+    right: 25px;
+    text-align: right;
+    font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+    color: #b78aff;
+    line-height: 1.4;
+    opacity: 0.85;
   }
 
-  p {
-    margin: 0.2rem 0;
-    font-size: clamp(0.85rem, 1.8vw, 1rem);
-  }
-
-  a {
-    color: #d698ff;
+  .socials a {
+    color: #c89aff;
     text-decoration: none;
     font-weight: bold;
   }
 
-  a:hover {
+  .socials a:hover {
+    color: #e0b9ff;
     text-decoration: underline;
-    color: #e4baff;
   }
+
 </style>
 </head>
 <body>
   <div class="container">
     <div class="moon">
       <h1>COMING SOON</h1>
-      <h2>Socials:</h2>
-      <p>IG: <a href="https://www.instagram.com/fgmrkt" target="_blank">fgmrkt</a></p>
-      <p>DC: <a href="https://discord.gg/fq64" target="_blank">fq64</a></p>
     </div>
+  </div>
+
+  <div class="socials">
+    <p>IG: <a href="https://www.instagram.com/fgmrkt" target="_blank">fgmrkt</a></p>
+    <p>DC: <a href="https://discord.gg/fq64" target="_blank">fq64</a></p>
   </div>
 
   <script>
