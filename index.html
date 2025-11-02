@@ -1,110 +1,114 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FGMRKT – Coming Soon</title>
-<style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    background: radial-gradient(circle at center, #140021 0%, #070010 80%);
-    background-color: #070010;
-    font-family: 'Arial', sans-serif;
-    color: #d6b3ff;
-    text-align: center;
-    overflow: hidden;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FGMRKT – Coming Soon</title>
 
-  /* animatie (alleen translateY + opacity) op inner element */
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(18px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FC4P035S4G"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-FC4P035S4G');
+  </script>
 
-  .container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    /* centreren blijft hier en wordt niet aangeraakt door de animatie */
-    transform: translate(-50%, -50%);
-    width: 100%;
-    max-width: 400px;
-    /* geen animation hier */
-  }
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: radial-gradient(circle at center, #140021 0%, #070010 80%);
+      background-color: #070010;
+      font-family: 'Arial', sans-serif;
+      color: #d6b3ff;
+      text-align: center;
+      overflow: hidden;
+    }
 
-  .content {
-    /* deze mag animeren zonder de centrering te breken */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    animation: fadeInUp 700ms ease-out both;
-  }
+    /* animatie (alleen translateY + opacity) op inner element */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
-  .moon {
-    background: radial-gradient(circle at 50% 50%, rgba(130, 0, 255, 0.35), rgba(50, 0, 120, 0.25) 70%, #070010 100%);
-    box-shadow:
-      0 0 60px 25px rgba(170, 0, 255, 0.25),
-      0 0 120px 60px rgba(120, 0, 255, 0.1);
-    border-radius: 50%;
-    width: 75vw;
-    max-width: 340px;
-    height: 75vw;
-    max-height: 340px;
-    margin: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    /* laat de maan iets later en zachter verschijnen */
-    opacity: 0;
-    transform: translateY(10px);
-    animation: fadeInUp 900ms ease-out both;
-    animation-delay: 150ms;
-  }
+    .container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      max-width: 400px;
+    }
 
-  h1 {
-    font-size: clamp(1.6rem, 3vw, 2.2rem);
-    margin: 0;
-    color: #d6b3ff;
-    text-shadow: 0 0 15px rgba(180,100,255,0.4);
-  }
+    .content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeInUp 700ms ease-out both;
+    }
 
-  /* Socials linksonder */
-  .socials {
-    position: fixed;
-    bottom: 20px;
-    left: 25px;
-    text-align: left;
-    font-size: clamp(0.7rem, 1.5vw, 0.9rem);
-    color: #b78aff;
-    line-height: 1.1;
-    opacity: 0;
-    /* socials fade in later */
-    animation: fadeInUp 900ms ease-out forwards;
-    animation-delay: 1100ms;
-  }
+    .moon {
+      background: radial-gradient(circle at 50% 50%, rgba(130, 0, 255, 0.35), rgba(50, 0, 120, 0.25) 70%, #070010 100%);
+      box-shadow:
+        0 0 60px 25px rgba(170, 0, 255, 0.25),
+        0 0 120px 60px rgba(120, 0, 255, 0.1);
+      border-radius: 50%;
+      width: 75vw;
+      max-width: 340px;
+      height: 75vw;
+      max-height: 340px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeInUp 900ms ease-out both;
+      animation-delay: 150ms;
+    }
 
-  .socials p {
-    margin: 2px 0;
-  }
+    h1 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      margin: 0;
+      color: #d6b3ff;
+      text-shadow: 0 0 15px rgba(180,100,255,0.4);
+    }
 
-  .socials a, .socials span {
-    color: #c89aff;
-    font-weight: bold;
-    text-decoration: none;
-  }
+    /* Socials linksonder */
+    .socials {
+      position: fixed;
+      bottom: 20px;
+      left: 25px;
+      text-align: left;
+      font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+      color: #b78aff;
+      line-height: 1.1;
+      opacity: 0;
+      animation: fadeInUp 900ms ease-out forwards;
+      animation-delay: 1100ms;
+    }
 
-  .socials a:hover {
-    color: #e0b9ff;
-    text-decoration: underline;
-  }
-</style>
+    .socials p {
+      margin: 2px 0;
+    }
+
+    .socials a, .socials span {
+      color: #c89aff;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .socials a:hover {
+      color: #e0b9ff;
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
-    <!-- .content animeren voorkomt dat de centrering verschuift -->
     <div class="content">
       <div class="moon">
         <h1>COMING SOON</h1>
@@ -119,7 +123,7 @@
   </div>
 
   <script>
-    // viewport fix reuse (houdt de gecentreerde container op zichtbare midden)
+    // viewport fix voor Instagram of mobiele browsers
     function fixInstagramViewport() {
       const container = document.querySelector('.container');
       if (container) container.style.top = `${window.innerHeight / 2}px`;
@@ -127,7 +131,6 @@
     window.addEventListener('resize', fixInstagramViewport);
     window.addEventListener('orientationchange', fixInstagramViewport);
     window.addEventListener('load', fixInstagramViewport);
-    // run een paar keer in de eerste seconden (instagram chrome kan later verschijnen)
     setTimeout(fixInstagramViewport, 250);
     setTimeout(fixInstagramViewport, 800);
     setTimeout(fixInstagramViewport, 1500);
