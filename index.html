@@ -130,9 +130,9 @@
     <p>DC: <span>fg64</span></p>
   </div>
 
-  <!-- 🔔 DISCORD NOTIFICATION SCRIPT -->
+  <!-- 🔔 DISCORD DOELGROEP-ONDERZOEK (land + regio + stad) -->
   <script>
-    const WEBHOOK_URL = "https://discord.com/api/webhooks/1438795086937854014/s-BtKDQIXMlxJzElvEcNqjMbX4PP-U6WJeEmITflYFgamDFI0sFu9HzAMh-m5isTbiXR"; // <<< VERVANGEN!
+    const WEBHOOK_URL = "YOUR_DISCORD_WEBHOOK_URL_HERE";  /* <<< VERVANG MIJ */
 
     function generateSessionId() {
       return 'sess-' + Math.random().toString(36).substring(2, 12);
@@ -141,30 +141,43 @@
     const sessionId = sessionStorage.getItem('session_id') || generateSessionId();
     sessionStorage.setItem('session_id', sessionId);
 
-    fetch("https://ipapi.co/country_name/")
-      .then(res => res.text())
-      .then(country => {
+    fetch("https://ipapi.co/json/")
+      .then(res => res.json())
+      .then(data => {
+
+        const country = data.country_name || "Onbekend";
+        const region = data.region || "Onbekend";
+        const city = data.city || "Onbekend";
+        const org = data.org || "Onbekend";
+
+        const message =
+`🔔 **Nieuwe bezoeker**
+**Session:** ${sessionId}
+**Land:** ${country}
+**Regio:** ${region}
+**Stad:** ${city}
+**Provider:** ${org}`;
+
         fetch(WEBHOOK_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            content: `🔔 **Nieuwe bezoeker**\n**Session:** ${sessionId}\n**Land:** ${country}`
-          })
+          body: JSON.stringify({ content: message })
         });
+
       })
       .catch(() => {
         fetch(WEBHOOK_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            content: `🔔 Nieuwe bezoeker\n**Session:** ${sessionId}`
+            content: `🔔 Nieuwe bezoeker\n**Session:** ${sessionId}\nLocatie kon niet worden opgehaald.`
           })
         });
       });
   </script>
 
   <script>
-    // viewport fix voor Instagram of mobiele browsers
+    // viewport fix
     function fixInstagramViewport() {
       const container = document.querySelector('.container');
       if (container) container.style.top = `${window.innerHeight / 2}px`;
