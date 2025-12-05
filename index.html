@@ -5,15 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FGMRKT – Coming Soon</title>
 
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FC4P035S4G"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-FC4P035S4G');
+  </script>
+
+  <!-- Microsoft Clarity -->
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "u00kh1eys2");
+  </script>
+
   <style>
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
-      background: radial-gradient(circle at center, #1a1a1a 0%, #000 80%);
-      background-color: #0f0f0f;
+      background: radial-gradient(circle at center, #140021 0%, #070010 80%);
+      background-color: #070010;
       font-family: 'Arial', sans-serif;
-      color: #b5b5b5;
+      color: #e5e5e5; /* was #d6b3ff */
       text-align: center;
       overflow: hidden;
     }
@@ -40,10 +58,10 @@
     }
 
     .moon {
-      background: radial-gradient(circle at 50% 50%, rgba(120,120,120,0.18), rgba(60,60,60,0.12) 60%, #000 100%);
+      background: radial-gradient(circle at 50% 50%, rgba(200,200,200,0.35), rgba(140,140,140,0.25) 70%, #070010 100%);
       box-shadow:
-        0 0 50px 20px rgba(255,255,255,0.15),
-        0 0 100px 40px rgba(200,200,200,0.08);
+        0 0 60px 25px rgba(255,255,255,0.25),
+        0 0 120px 60px rgba(180,180,180,0.1);
       border-radius: 50%;
       width: 75vw;
       max-width: 340px;
@@ -63,8 +81,8 @@
     h1 {
       font-size: clamp(1.6rem, 3vw, 2.2rem);
       margin: 0;
-      color: #f0f0f0;
-      text-shadow: 0 0 10px rgba(150,150,150,0.2);
+      color: #f0f0f0; /* was purple tint */
+      text-shadow: 0 0 15px rgba(200,200,200,0.4);
     }
 
     .socials {
@@ -73,7 +91,7 @@
       left: 25px;
       text-align: left;
       font-size: clamp(0.7rem, 1.5vw, 0.9rem);
-      color: #cccccc;
+      color: #cfcfcf; /* was #b78aff */
       line-height: 1.1;
       opacity: 0;
       animation: fadeInUp 900ms ease-out forwards;
@@ -85,17 +103,18 @@
     }
 
     .socials a, .socials span {
-      color: #d0d0d0;
+      color: #f0f0f0; /* was #c89aff */
       font-weight: bold;
       text-decoration: none;
     }
 
     .socials a:hover {
-      color: #dddddd;
+      color: #ffffff; /* was purple highlight */
       text-decoration: underline;
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <div class="content">
@@ -110,5 +129,64 @@
     <p>TT: <a href="https://www.tiktok.com/@fgmrkt" target="_blank" rel="noopener">fgmrkt</a></p>
     <p>DC: <a target="_blank" rel="noopener">fg64</a></p>
   </div>
+
+  <!-- 🔔 DISCORD DOELGROEP-ONDERZOEK -->
+  <script>
+    const WEBHOOK_URL = "https://discord.com/api/webhooks/1442894496357421184/9AB3-4ms8pS_P9AHfxFvdbPlwnwms8FaY5r1UVxwMbm9OwH7gvZBZ9tiWAB7LHCQSV-q";
+
+    function generateSessionId() {
+      return 'sess-' + Math.random().toString(36).substring(2, 12);
+    }
+
+    const sessionId = sessionStorage.getItem('session_id') || generateSessionId();
+    sessionStorage.setItem('session_id', sessionId);
+
+    fetch("https://ipapi.co/json/")
+      .then(res => res.json())
+      .then(data => {
+
+        const country = data.country_name || "Onbekend";
+        const region = data.region || "Onbekend";
+        const city = data.city || "Onbekend";
+        const org = data.org || "Onbekend";
+
+        const message =
+`🔔 **Nieuwe bezoeker**
+**Session:** ${sessionId}
+**Land:** ${country}
+**Regio:** ${region}
+**Stad:** ${city}
+**Provider:** ${org}`;
+
+        fetch(WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content: message })
+        });
+
+      })
+      .catch(() => {
+        fetch(WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            content: `🔔 Nieuwe bezoeker\n**Session:** ${sessionId}\nLocatie kon niet worden opgehaald.`
+          })
+        });
+      });
+  </script>
+
+  <script>
+    function fixInstagramViewport() {
+      const container = document.querySelector('.container');
+      if (container) container.style.top = `${window.innerHeight / 2}px`;
+    }
+    window.addEventListener('resize', fixInstagramViewport);
+    window.addEventListener('orientationchange', fixInstagramViewport);
+    window.addEventListener('load', fixInstagramViewport);
+    setTimeout(fixInstagramViewport, 250);
+    setTimeout(fixInstagramViewport, 800);
+    setTimeout(fixInstagramViewport, 1500);
+  </script>
 </body>
 </html>
