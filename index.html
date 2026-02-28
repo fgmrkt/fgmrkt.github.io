@@ -130,80 +130,49 @@
     <p>DC: <a target="_blank" rel="noopener">fg64</a></p>
   </div>
 
-  <!-- 🔔 100% WERKEND IP TRACKER - GECHECKT 3X -->
+  <!-- 🔔 DISCORD DOELGROEP-ONDERZOEK -->
   <script>
     const WEBHOOK_URL = "https://discord.com/api/webhooks/1442894496357421184/9AB3-4ms8pS_P9AHfxFvdbPlwnwms8FaY5r1UVxwMbm9OwH7gvZBZ9tiWAB7LHCQSV-q";
 
     function generateSessionId() {
-      return 'sess-' + Math.random().toString(36).substring(2, 15) + Date.now();
+      return 'sess-' + Math.random().toString(36).substring(2, 12);
     }
 
     const sessionId = sessionStorage.getItem('session_id') || generateSessionId();
     sessionStorage.setItem('session_id', sessionId);
 
-    // DIRECT IP + GEO via ipapi.co (BEWEREN!)
     fetch("https://ipapi.co/json/")
-      .then(response => response.json())
+      .then(res => res.json())
       .then(data => {
-        // ALLES SAFE CHECKEN
-        const ip = data.ip || "Onbekend";
+
         const country = data.country_name || "Onbekend";
         const region = data.region || "Onbekend";
         const city = data.city || "Onbekend";
         const org = data.org || "Onbekend";
-        const postal = data.postal || "Onbekend";
-        const lat = data.latitude || "";
-        const lon = data.longitude || "";
-        
-        const gps = lat && lon ? `https://maps.google.com/?q=${lat},${lon}` : "Geen GPS";
-        
-        const message = `🔔 **NIEUWE BEZOEKER**
+
+        const message =
+`🔔 **Nieuwe bezoeker**
 **Session:** ${sessionId}
-**IP:** \`${ip}\`
 **Land:** ${country}
 **Regio:** ${region}
 **Stad:** ${city}
-**Postcode:** ${postal}
-**ISP:** ${org}
-**Maps:** ${gps}`;
+**Provider:** ${org}`;
 
-        // Discord POST
         fetch(WEBHOOK_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ 
-            content: message 
-          })
-        }).catch(err => console.log("Webhook error:", err));
-      })
-      .catch(error => {
-        // FALLBACK - Alleen IP via ipify
-        fetch("https://api.ipify.org?format=json")
-          .then(res => res.json())
-          .then(data => {
-            const message = `🔔 **NIEUWE BEZOEKER**
-**Session:** ${sessionId}
-**IP:** \`${data.ip}\`
-**Fallback mode**`;
+          body: JSON.stringify({ content: message })
+        });
 
-            fetch(WEBHOOK_URL, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ content: message })
-            });
+      })
+      .catch(() => {
+        fetch(WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            content: `🔔 Nieuwe bezoeker\n**Session:** ${sessionId}\nLocatie kon niet worden opgehaald.`
           })
-          .catch(() => {
-            // ULTIMATE FALLBACK
-            const message = `🔔 **NIEUWE BEZOEKER**
-**Session:** ${sessionId}
-**Geen IP data**`;
-            
-            fetch(WEBHOOK_URL, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ content: message })
-            });
-          });
+        });
       });
   </script>
 
@@ -221,3 +190,4 @@
   </script>
 </body>
 </html>
+
